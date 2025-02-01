@@ -4,7 +4,6 @@ import json
 from datetime import datetime, timedelta
 
 
-
 LOGIN_URL = "https://lms.utmn.ru/login/token.php"
 CALENDAR_URL = "https://lms.utmn.ru/webservice/rest/server.php"
 
@@ -22,7 +21,7 @@ def getToken(user, password):  # returns token string
             headers = headers)
 
         token_data = r.json()
-        return token_data.get("token", None)
+        return token_data.get("token", -1)
 
     # connection problems
     except requests.ConnectionError:
@@ -62,7 +61,7 @@ def getCalendar(token):  # returns raw calendar response
         return (-1)
 
 
-def formatDict(raw):  #returns json dictioanary
+def formatDict(raw):  # returns json dictioanary
     try:
         raw = raw.replace("\\/", "/")
         null = "null"
@@ -87,7 +86,7 @@ def formatDict(raw):  #returns json dictioanary
 def buildOutput(calendar):
     # recieves a python dictionary (output of the formatDict())
     try:
-        events = calendar.get('events', [])  # list of a dictionaries
+        events = calendar.get('events')  # list of a dictionaries
         out = ""
         for event in events:
             start = convertTime(event['timestart'])
